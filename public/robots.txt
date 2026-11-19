@@ -1,15 +1,6 @@
-# robots.txt — https://thikka.me
+# robots.txt — https://theekshana-sudeepa.github.io/
 User-agent: *
 Allow: /
-Disallow: /assets/
 
 # Sitemap
-Sitemap: https://thikka.me/sitemap.xml
-
-# Google
-User-agent: Googlebot
-Allow: /
-
-# Bing
-User-agent: Bingbot
-Allow: /
+Sitemap: https://theekshana-sudeepa.github.io/sitemap.xml

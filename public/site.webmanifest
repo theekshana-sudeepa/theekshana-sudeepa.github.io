@@ -1,0 +1,17 @@
+{
+  "name": "Theekshana Sudeepa — Software Engineer Portfolio",
+  "short_name": "Theekshana Sudeepa",
+  "description": "Full-Stack, Enterprise Java, IAM, and AI Software Engineer from Colombo, Sri Lanka.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#06060A",
+  "theme_color": "#06060A",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

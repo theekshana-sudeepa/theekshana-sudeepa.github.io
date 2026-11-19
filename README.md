@@ -1,11 +1,11 @@
 <div align="center">
 
-# T. — Theekshana Sudeepa (`thikka.me`)
+# T. — Theekshana Sudeepa (`theekshana-sudeepa.github.io`)
 
 **Personal Engineering Portfolio — Full-Stack, Enterprise Java, IAM & AI Systems.**  
-Built with React 19, Vite 8, first-class Light/Dark theme parity, accessible semantics, and automated GitHub Pages CI/CD.
+Built with React 19, Vite 8, first-class Light/Dark theme parity, unified Schema.org Knowledge Graph SEO, and automated GitHub Pages CI/CD.
 
-[![Live Site](https://img.shields.io/badge/Live-thikka.me-4A9DFF?style=for-the-badge&logo=googlechrome&logoColor=white)](https://thikka.me)
+[![Live Site](https://img.shields.io/badge/Live-theekshana--sudeepa.github.io-4A9DFF?style=for-the-badge&logo=googlechrome&logoColor=white)](https://theekshana-sudeepa.github.io/)
 [![React 19](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![Vite 8](https://img.shields.io/badge/Vite-8.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
 [![Deploy CI](https://img.shields.io/badge/Deploy-GitHub_Pages-222222?style=for-the-badge&logo=githubactions&logoColor=white)](.github/workflows/deploy.yml)
@@ -27,15 +27,15 @@ flowchart LR
     end
 
     subgraph Build["Vite 8 Production Pipeline"]
-        Entry["index.html<br/>Anti-FOUC Script & JSON-LD SEO"]
-        Public["public/<br/>CNAME, og-image.png, sitemap.xml"]
+        Entry["index.html<br/>Anti-FOUC Script & Schema Graph"]
+        Public["public/<br/>og-image.png, sitemap.xml, robots.txt, llms.txt"]
         Bundle["Static Dist Output<br/>Hashed JS & CSS Chunks"]
     end
 
-    subgraph Delivery["Automated CI/CD & Edge"]
+    subgraph Delivery["Automated CI/CD & Discovery"]
         GHA["GitHub Actions<br/>deploy.yml Workflow"]
-        Pages["GitHub Pages<br/>Custom Domain thikka.me"]
-        Crawler["Search & Social Crawlers<br/>Open Graph & Schema.org"]
+        Pages["GitHub Pages<br/>theekshana-sudeepa.github.io"]
+        Crawler["Search & AI Crawlers<br/>Googlebot, Open Graph & llms.txt"]
     end
 
     Data -->|Hydrate Sections| App
@@ -46,18 +46,18 @@ flowchart LR
     Public -->|Copy Static Assets| Bundle
     Bundle -->|Upload Artifact on Push| GHA
     GHA -->|Publish Production Build| Pages
-    Pages -->|Serve Meta and Preview Card| Crawler
+    Pages -->|Serve Schema Graph and Preview| Crawler
 ```
 
 ---
 
-## Engineering Highlights
+## Engineering & Technical SEO Highlights
 
-- **Modular Zero-Bloat Frontend:** Clean separation of data registry (`src/data/portfolioData.js`), vector icon primitives (`src/components/Icons.jsx`), design-token stylesheet (`src/styles/portfolio.css`), and accessible React 19 components (`src/Portfolio.jsx`) with zero runtime UI framework overhead.
-- **First-Class Light & Dark Theme Parity:** CSS custom properties (`[data-theme="dark"]` and `[data-theme="light"]`) with WCAG AA+ text contrast, persistent `localStorage` state, and an inline pre-paint boot script in `index.html` to eliminate flash-of-wrong-theme (FOUC).
-- **Interactive Domain Filtering & Scroll-Spy Navigation:** `IntersectionObserver`-driven section tracking, category-filtered showcase of live production and open-source work (`AI & Full-Stack`, `Enterprise & IAM`, `Mobile & Systems`), keyboard-accessible controls, and `@media (prefers-reduced-motion: reduce)` compliance.
-- **Technical SEO & Social Preview Engineering:** Structured Schema.org JSON-LD (`Person`, `WebSite`), custom-rendered 1200×630 Open Graph card (`public/og-image.png`), semantic `<noscript>` crawler fallback, `robots.txt`, and canonical `sitemap.xml`.
-- **Automated Deployment & Security Headers:** Zero-downtime deployment via GitHub Actions (`.github/workflows/deploy.yml`) to `thikka.me` (`CNAME`), paired with optional Vercel security headers (`vercel.json`) for `X-Content-Type-Options`, `X-Frame-Options`, and immutable asset caching.
+- **Canonical GitHub Pages SEO (`https://theekshana-sudeepa.github.io/`):** Strict trailing-slash canonical alignment across `<link rel="canonical">`, Open Graph (`profile` + `og:image:secure_url`), Twitter Cards, `sitemap.xml`, `robots.txt`, `site.webmanifest`, and `llms.txt` — with `/assets/` explicitly crawlable so Google's Web Rendering Service executes JS/CSS without obstruction.
+- **Unified Schema.org `@graph` Knowledge Graph:** Interlinked JSON-LD entities (`ProfilePage`, `Person`, `WebSite`, and `ItemList` of `SoftwareSourceCode` repositories) paired with a single semantic `<h1>` and full `<noscript>` crawler fallback.
+- **Core Web Vitals Optimization:** Non-blocking Google Fonts `<link>` preconnect loading in `index.html` (eliminating render-blocking CSS `@import` chains), extracted static CSS bundle, and zero runtime UI framework overhead.
+- **First-Class Light & Dark Theme Parity:** CSS custom properties (`[data-theme="dark"]` and `[data-theme="light"]`) with WCAG AA+ text contrast, persistent `localStorage` state, and an inline pre-paint boot script to prevent flash-of-wrong-theme (FOUC).
+- **Interactive Domain Filtering & Scroll-Spy Navigation:** `IntersectionObserver`-driven section tracking, category-filtered showcase of verified open-source work (`AI & Full-Stack`, `Enterprise & IAM`, `Mobile & Systems`), keyboard-accessible controls, and `prefers-reduced-motion` support.
 
 ---
 
@@ -84,10 +84,11 @@ theekshana-sudeepa.github.io/
 │   └── workflows/
 │       └── deploy.yml            # Automated GitHub Pages build & deploy workflow
 ├── public/
-│   ├── CNAME                     # Custom domain binding (thikka.me)
 │   ├── favicon.svg               # Vector monogram favicon
+│   ├── llms.txt                  # Structured AI/LLM search engine index
 │   ├── og-image.png              # 1200x630 Open Graph & social preview card
-│   ├── robots.txt                # Search crawler directives
+│   ├── robots.txt                # Search crawler directives (full asset rendering)
+│   ├── site.webmanifest          # PWA manifest metadata
 │   └── sitemap.xml               # Canonical XML sitemap
 ├── src/
 │   ├── components/
@@ -98,12 +99,11 @@ theekshana-sudeepa.github.io/
 │   │   └── portfolio.css         # Light/Dark CSS custom properties & responsive layout
 │   ├── Portfolio.jsx             # Main portfolio application & interactive hooks
 │   └── main.jsx                  # React 19 StrictMode root mount
-├── CNAME                         # Root custom domain record
 ├── LICENSE                       # MIT License
 ├── eslint.config.js              # ESLint 10 flat configuration (React Hooks + Refresh)
-├── index.html                    # Entry document with anti-FOUC theme boot & JSON-LD
+├── index.html                    # Entry document with anti-FOUC boot & Schema.org @graph
 ├── package.json                  # Project manifest & scripts
-├── vercel.json                   # Optional Vercel SPA rewrites & security headers
+├── vercel.json                   # Optional SPA rewrites & security headers
 └── vite.config.js                # Vite 8 build configuration
 ```
 
@@ -156,6 +156,6 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE) fo
 <div align="center">
 
 **Theekshana Sudeepa**  
-[Portfolio (`thikka.me`)](https://thikka.me) · [LinkedIn](https://www.linkedin.com/in/theekshana-sudeepa/) · [GitHub](https://github.com/theekshana-sudeepa) · [LexoraTech](https://lexoratech.com)
+[Portfolio (`theekshana-sudeepa.github.io`)](https://theekshana-sudeepa.github.io/) · [LinkedIn](https://www.linkedin.com/in/theekshana-sudeepa/) · [GitHub](https://github.com/theekshana-sudeepa) · [LexoraTech](https://lexoratech.com)
 
 </div>

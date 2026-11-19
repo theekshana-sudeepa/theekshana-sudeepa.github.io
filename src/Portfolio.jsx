@@ -366,19 +366,25 @@ function Hero() {
           Hello, I&apos;m
         </p>
 
-        {[PROFILE.firstName, PROFILE.lastName].map((word, idx) => (
-          <div key={word} style={{ overflow: "hidden", lineHeight: 1.02 }}>
-            <h1
-              className={idx === 1 ? "hero-name at" : "hero-name"}
-              style={{
-                marginBottom: idx === 0 ? 4 : 8,
-                animation: `revealUp 0.85s cubic-bezier(.16,1,.3,1) ${0.24 + idx * 0.1}s both`,
-              }}
+        <h1 className="hero-name" style={{ marginBottom: 8 }}>
+          {[PROFILE.firstName, PROFILE.lastName].map((word, idx) => (
+            <span
+              key={word}
+              style={{ display: "block", overflow: "hidden", lineHeight: 1.02 }}
             >
-              {word}
-            </h1>
-          </div>
-        ))}
+              <span
+                className={idx === 1 ? "at" : undefined}
+                style={{
+                  display: "block",
+                  marginBottom: idx === 0 ? 4 : 0,
+                  animation: `revealUp 0.85s cubic-bezier(.16,1,.3,1) ${0.24 + idx * 0.1}s both`,
+                }}
+              >
+                {word}
+              </span>
+            </span>
+          ))}
+        </h1>
 
         <div
           className="hero-typer"
@@ -1030,13 +1036,13 @@ function Vision() {
 function Connect() {
   const [copied, setCopied] = useState(false);
 
-  const handleCopyEmail = async () => {
+  const handleCopyUrl = async () => {
     try {
-      await navigator.clipboard.writeText(PROFILE.email);
+      await navigator.clipboard.writeText(PROFILE.website);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2200);
     } catch {
-      window.location.href = `mailto:${PROFILE.email}`;
+      window.open(PROFILE.linkedin, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -1072,10 +1078,27 @@ function Connect() {
           high-impact distributed systems or AI collaborations.
         </p>
 
-        <button type="button" className="copy-email-btn" onClick={handleCopyEmail}>
-          <Icon name={copied ? "check" : "copy"} size={15} />
-          <span>{copied ? "Copied hello@thikka.me" : PROFILE.email}</span>
-        </button>
+        <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
+          <a
+            href={PROFILE.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cta-primary"
+          >
+            <Icon name="linkedin" size={16} />
+            <span>Message on LinkedIn</span>
+          </a>
+
+          <button
+            type="button"
+            className="copy-email-btn"
+            style={{ margin: 0 }}
+            onClick={handleCopyUrl}
+          >
+            <Icon name={copied ? "check" : "copy"} size={15} />
+            <span>{copied ? "Copied Portfolio URL" : PROFILE.websiteHost}</span>
+          </button>
+        </div>
       </div>
 
       <div className="connect-buttons-row">

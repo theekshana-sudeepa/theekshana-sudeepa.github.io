@@ -1,0 +1,27 @@
+# Theekshana Sudeepa — Software Engineer Portfolio
+
+> Official personal portfolio of Theekshana Sudeepa, a Full-Stack, Enterprise Java (Jakarta EE / Hibernate), WSO2 IAM, and AI Software Engineer from Colombo, Sri Lanka.
+
+- Canonical URL: https://theekshana-sudeepa.github.io/
+- GitHub: https://github.com/theekshana-sudeepa
+- LinkedIn: https://www.linkedin.com/in/theekshana-sudeepa/
+- Location: Colombo, Sri Lanka
+- Education: BSc (Hons) in Software Engineering (Final Stage, Birmingham City University / JIAT); UK Level 5 Higher Diploma & Level 4 Diploma in Software Engineering.
+
+## Core Engineering Expertise
+
+- AI-Native Systems & MCP: Agentic commerce, Model Context Protocol (MCP) tool servers, Vercel AI SDK, and catalog OCR pipelines.
+- Full-Stack & Offline-First Platforms: React 19, Next.js 16, TypeScript, Express, Prisma ORM, MySQL 8, PostgreSQL, and multi-tenant PWA architecture.
+- Enterprise Java & IAM: Jakarta EE 10, EJB 4.0, Hibernate 6 ORM, WSO2 Identity Server / Asgardeo OIDC PKCE, stateless RS256 JWKS verification, RBAC, and JSR-356 WebSockets.
+- Mobile & Systems Engineering: React Native (Expo), native Android (Java/Firebase), deterministic Unity C# simulation engines, and ESP32 / IoT hardware prototyping.
+
+## Featured Open-Source & Production Systems
+
+- [Kasa AI Concierge](https://github.com/theekshana-sudeepa/kasa): Trilingual agentic shopping concierge built with Next.js 16, Vercel AI SDK, and MCP (Live: https://kasa-theta.vercel.app).
+- [Sillara Retail OS](https://github.com/theekshana-sudeepa/sillara): Offline-first, multi-tenant POS PWA and B2B retail supply network with React 19, TypeScript, Express, Prisma, MySQL 8, and AI catalog OCR.
+- [AutoBilling Engine](https://github.com/theekshana-sudeepa/autobilling): Idempotent recurring billing, PDF invoicing, and automated payment chasing platform with React 19, TypeScript, Prisma, MySQL, and AWS/OCI IaC.
+- [GlobalTrade SCM](https://github.com/theekshana-sudeepa/globaltrade-scm): Modular Jakarta EE 10 supply chain platform with EJB 4.0, Hibernate 6, JWT RBAC, CDI interceptors, and WildFly 31+.
+- [WSO2 Identity Integration](https://github.com/theekshana-sudeepa/wso2-identity-integration-demo): Enterprise WSO2 Identity Server & Asgardeo CIAM demo featuring OIDC PKCE, stateless RS256 JWKS verification, RBAC middleware, and Docker.
+- [Nimithi Platform](https://nimithi.com): Bilingual (Sinhala & English) Vedic astronomical platform calculating planetary positions and Panchanga from Swiss Ephemeris data.
+- [Tappsy Messaging Suite](https://github.com/theekshana-sudeepa/Tappsy): Real-time cross-platform mobile messaging app (React Native / Expo SDK 54, TypeScript) paired with [TappsyBackEnd](https://github.com/theekshana-sudeepa/TappsyBackEnd) (Java EE JSR-356 WebSockets, Hibernate, MySQL 8).
+- [Overdraft Roguelite](https://github.com/theekshana-sudeepa/overdraft-roguelite): Deterministic 60 Hz Unity C# twin-stick roguelite with zero-GC hot paths and a physics-free counting-sort spatial grid.
