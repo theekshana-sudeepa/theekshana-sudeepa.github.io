@@ -17,11 +17,11 @@
 
 ## Featured Open-Source & Production Systems
 
-- [Kasa AI Concierge](https://github.com/theekshana-sudeepa/kasa): Trilingual agentic shopping concierge built with Next.js 16, Vercel AI SDK, and MCP (Live: https://kasa-theta.vercel.app).
+- [Kasa AI Concierge](https://github.com/theekshana-sudeepa/kasa): Trilingual agentic shopping concierge built with Next.js 16, Vercel AI SDK, and MCP.
 - [Sillara Retail OS](https://github.com/theekshana-sudeepa/sillara): Offline-first, multi-tenant POS PWA and B2B retail supply network with React 19, TypeScript, Express, Prisma, MySQL 8, and AI catalog OCR.
 - [AutoBilling Engine](https://github.com/theekshana-sudeepa/autobilling): Idempotent recurring billing, PDF invoicing, and automated payment chasing platform with React 19, TypeScript, Prisma, MySQL, and AWS/OCI IaC.
 - [GlobalTrade SCM](https://github.com/theekshana-sudeepa/globaltrade-scm): Modular Jakarta EE 10 supply chain platform with EJB 4.0, Hibernate 6, JWT RBAC, CDI interceptors, and WildFly 31+.
 - [WSO2 Identity Integration](https://github.com/theekshana-sudeepa/wso2-identity-integration-demo): Enterprise WSO2 Identity Server & Asgardeo CIAM demo featuring OIDC PKCE, stateless RS256 JWKS verification, RBAC middleware, and Docker.
-- [Nimithi Platform](https://nimithi.com): Bilingual (Sinhala & English) Vedic astronomical platform calculating planetary positions and Panchanga from Swiss Ephemeris data.
+- [Nimithi Platform](https://www.nimithi.com/): Bilingual (Sinhala & English) Vedic astronomical platform calculating planetary positions and Panchanga from Swiss Ephemeris data.
 - [Tappsy Messaging Suite](https://github.com/theekshana-sudeepa/Tappsy): Real-time cross-platform mobile messaging app (React Native / Expo SDK 54, TypeScript) paired with [TappsyBackEnd](https://github.com/theekshana-sudeepa/TappsyBackEnd) (Java EE JSR-356 WebSockets, Hibernate, MySQL 8).
 - [Overdraft Roguelite](https://github.com/theekshana-sudeepa/overdraft-roguelite): Deterministic 60 Hz Unity C# twin-stick roguelite with zero-GC hot paths and a physics-free counting-sort spatial grid.
