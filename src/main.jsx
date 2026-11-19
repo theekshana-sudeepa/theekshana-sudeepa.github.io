@@ -1,9 +1,16 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import Portfolio from './Portfolio.jsx'
+import { StrictMode } from "react";
+import { createRoot, hydrateRoot } from "react-dom/client";
+import Portfolio from "./Portfolio.jsx";
 
-createRoot(document.getElementById('root')).render(
+const container = document.getElementById("root");
+const app = (
   <StrictMode>
     <Portfolio />
-  </StrictMode>,
-)
+  </StrictMode>
+);
+
+if (container.hasChildNodes()) {
+  hydrateRoot(container, app);
+} else {
+  createRoot(container).render(app);
+}

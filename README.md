@@ -26,38 +26,39 @@ flowchart LR
         App["Portfolio.jsx<br/>Scroll-Spy, Filter & Theme Engine"]
     end
 
-    subgraph Build["Vite 8 Production Pipeline"]
+    subgraph Build["Vite 8 Production & SSR Pipeline"]
         Entry["index.html<br/>Anti-FOUC Script & Schema Graph"]
-        Public["public/<br/>og-image.png, sitemap.xml, robots.txt, llms.txt"]
-        Bundle["Static Dist Output<br/>Hashed JS & CSS Chunks"]
+        SSR["scripts/prerender.mjs<br/>React 19 renderToString Pre-Render"]
+        Public["public/<br/>og-image, ICO/PNG Icons, 404, llms.txt"]
+        Bundle["Static Pre-Rendered Dist<br/>Full HTML + Hydrated JS/CSS"]
     end
 
     subgraph Delivery["Automated CI/CD & Discovery"]
         GHA["GitHub Actions<br/>deploy.yml Workflow"]
         Pages["GitHub Pages<br/>theekshana-sudeepa.github.io"]
-        Crawler["Search & AI Crawlers<br/>Googlebot, Open Graph & llms.txt"]
+        Crawler["Search & AI Crawlers<br/>Wave-1 HTML, Open Graph & llms.txt"]
     end
 
     Data -->|Hydrate Sections| App
     Icons -->|Render UI Glyphs| App
     Styles -->|Apply Theme Variables| App
-    App -->|Compile Modules| Bundle
+    App -->|Compile Client and SSR Bundles| SSR
     Entry -->|Inject SEO and Theme Boot| Bundle
+    SSR -->|Inject Static HTML into Root| Bundle
     Public -->|Copy Static Assets| Bundle
     Bundle -->|Upload Artifact on Push| GHA
     GHA -->|Publish Production Build| Pages
-    Pages -->|Serve Schema Graph and Preview| Crawler
+    Pages -->|Serve Pre-Rendered HTML and Schema| Crawler
 ```
 
 ---
 
 ## Engineering & Technical SEO Highlights
 
-- **Canonical GitHub Pages SEO (`https://theekshana-sudeepa.github.io/`):** Strict trailing-slash canonical alignment across `<link rel="canonical">`, Open Graph (`profile` + `og:image:secure_url`), Twitter Cards, `sitemap.xml`, `robots.txt`, `site.webmanifest`, and `llms.txt` — with `/assets/` explicitly crawlable so Google's Web Rendering Service executes JS/CSS without obstruction.
-- **Unified Schema.org `@graph` Knowledge Graph:** Interlinked JSON-LD entities (`ProfilePage`, `Person`, `WebSite`, and `ItemList` of `SoftwareSourceCode` repositories) paired with a single semantic `<h1>` and full `<noscript>` crawler fallback.
-- **Core Web Vitals Optimization:** Non-blocking Google Fonts `<link>` preconnect loading in `index.html` (eliminating render-blocking CSS `@import` chains), extracted static CSS bundle, and zero runtime UI framework overhead.
-- **First-Class Light & Dark Theme Parity:** CSS custom properties (`[data-theme="dark"]` and `[data-theme="light"]`) with WCAG AA+ text contrast, persistent `localStorage` state, and an inline pre-paint boot script to prevent flash-of-wrong-theme (FOUC).
-- **Interactive Domain Filtering & Scroll-Spy Navigation:** `IntersectionObserver`-driven section tracking, category-filtered showcase of verified open-source work (`AI & Full-Stack`, `Enterprise & IAM`, `Mobile & Systems`), keyboard-accessible controls, and `prefers-reduced-motion` support.
+- **Build-Time Static HTML Pre-Rendering (Zero Empty Root):** `scripts/prerender.mjs` renders the full React 19 component tree via `renderToString` directly into `dist/index.html` and hydrates seamlessly with `hydrateRoot` + `useSyncExternalStore` — giving Googlebot Wave-1, Bingbot, and AI crawlers complete HTML at `0ms` with near-instant FCP/LCP.
+- **Canonical GitHub Pages SEO (`https://theekshana-sudeepa.github.io/`):** Strict canonical alignment across `<link rel="canonical">`, Open Graph (`profile` + 1200×630 `og-image.png`), multi-size Google SERP favicons (`favicon.ico`, `48x48`, `180x180`, `192x192`, `512x512`), `sitemap.xml`, `robots.txt` (with `/assets/` crawlable), `site.webmanifest`, `llms.txt`, and branded `404.html` (`noindex, follow`).
+- **Unified Schema.org `@graph` & `rel="me"` Identity:** Interlinked JSON-LD entities (`ProfilePage`, `Person`, `WebSite`, and `ItemList` of `SoftwareSourceCode` repositories), bidirectional `rel="me"` links to GitHub & LinkedIn, and a single semantic `<h1>`.
+- **Accessibility, Theme Parity & Recruiter Print Mode:** First-class Dark/Light CSS tokens with WCAG AA+ contrast, anti-FOUC boot script, progressive scroll reveal (100% visible without JS), keyboard Skip-to-Content link, `prefers-reduced-motion` compliance, and a clean `@media print` Save-as-PDF layout.
 
 ---
 
@@ -84,21 +85,31 @@ theekshana-sudeepa.github.io/
 │   └── workflows/
 │       └── deploy.yml            # Automated GitHub Pages build & deploy workflow
 ├── public/
+│   ├── 404.html                  # Branded GitHub Pages 404 (noindex, follow)
+│   ├── apple-touch-icon.png      # 180x180 iOS touch icon
+│   ├── favicon-48x48.png         # 48x48 Google Search SERP favicon
+│   ├── favicon.ico               # Multi-resolution ICO favicon (16/32/48)
 │   ├── favicon.svg               # Vector monogram favicon
+│   ├── google4f59002a2fd92773.html # Google Search Console ownership verification
+│   ├── icon-192.png              # 192x192 PWA manifest icon
+│   ├── icon-512.png              # 512x512 PWA manifest icon
 │   ├── llms.txt                  # Structured AI/LLM search engine index
 │   ├── og-image.png              # 1200x630 Open Graph & social preview card
 │   ├── robots.txt                # Search crawler directives (full asset rendering)
 │   ├── site.webmanifest          # PWA manifest metadata
 │   └── sitemap.xml               # Canonical XML sitemap
+├── scripts/
+│   └── prerender.mjs             # Build-time React 19 SSR HTML pre-renderer
 ├── src/
 │   ├── components/
 │   │   └── Icons.jsx             # Reusable accessible SVG icon primitives
 │   ├── data/
 │   │   └── portfolioData.js      # Structured profile, track record, projects & stack data
 │   ├── styles/
-│   │   └── portfolio.css         # Light/Dark CSS custom properties & responsive layout
-│   ├── Portfolio.jsx             # Main portfolio application & interactive hooks
-│   └── main.jsx                  # React 19 StrictMode root mount
+│   │   └── portfolio.css         # Light/Dark design tokens, print styles & responsive layout
+│   ├── Portfolio.jsx             # Main portfolio application & hydration-safe hooks
+│   ├── entry-server.jsx          # React 19 renderToString server entry
+│   └── main.jsx                  # Smart hydrateRoot / createRoot client mount
 ├── LICENSE                       # MIT License
 ├── eslint.config.js              # ESLint 10 flat configuration (React Hooks + Refresh)
 ├── index.html                    # Entry document with anti-FOUC boot & Schema.org @graph

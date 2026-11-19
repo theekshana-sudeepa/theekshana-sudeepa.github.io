@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import "./styles/portfolio.css";
 import { Icon } from "./components/Icons.jsx";
 import {
@@ -20,7 +20,17 @@ import {
 
 function useReveal(dependency) {
   useEffect(() => {
+    document.documentElement.classList.add("js-reveal");
     const timers = [];
+    const vh = window.innerHeight || 900;
+
+    document.querySelectorAll(".sa:not(.v),.ia:not(.v)").forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < vh * 0.96) {
+        el.classList.add("v");
+      }
+    });
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -73,14 +83,14 @@ function useActiveSection(sectionIds) {
 }
 
 function useTyper(phrases) {
-  const [state, setState] = useState({ pi: 0, ci: 0, del: false });
+  const [state, setState] = useState({ pi: 0, ci: phrases[0].length, del: false });
 
   useEffect(() => {
     const phrase = phrases[state.pi];
     let delay = state.del ? 36 : 68;
 
     if (!state.del && state.ci === phrase.length) {
-      delay = 2100;
+      delay = 2200;
     }
 
     const timer = window.setTimeout(() => {
@@ -105,11 +115,35 @@ function useTyper(phrases) {
   return phrases[state.pi].slice(0, state.ci);
 }
 
-function getInitialTheme() {
-  if (typeof window === "undefined") return "dark";
-  const saved = window.localStorage.getItem("portfolio-theme");
-  if (saved === "light" || saved === "dark") return saved;
+function subscribeTheme(callback) {
+  window.addEventListener("portfolio-theme-change", callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    window.removeEventListener("portfolio-theme-change", callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+
+function getThemeSnapshot() {
+  return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+}
+
+function getThemeServerSnapshot() {
   return "dark";
+}
+
+function setDocumentTheme(nextTheme) {
+  document.documentElement.setAttribute("data-theme", nextTheme);
+  try {
+    window.localStorage.setItem("portfolio-theme", nextTheme);
+  } catch {
+    // Ignore private-browsing storage restrictions
+  }
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute("content", nextTheme === "dark" ? "#06060A" : "#F8F9FC");
+  }
+  window.dispatchEvent(new Event("portfolio-theme-change"));
 }
 
 /* ─────────────────────────────────────────────
@@ -438,7 +472,7 @@ function Hero() {
           <a
             href={PROFILE.github}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="me noopener noreferrer"
             className="cta-ghost"
             id="hero-cta-github"
           >
@@ -1082,7 +1116,7 @@ function Connect() {
           <a
             href={PROFILE.linkedin}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="me noopener noreferrer"
             className="cta-primary"
           >
             <Icon name="linkedin" size={16} />
@@ -1106,8 +1140,8 @@ function Connect() {
           <a
             key={s.name}
             href={s.href}
-            target={s.href.startsWith("mailto:") ? undefined : "_blank"}
-            rel={s.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+            target="_blank"
+            rel={s.name === "LinkedIn" || s.name === "GitHub" ? "me noopener noreferrer" : "noopener noreferrer"}
             className="connect-btn ia"
             data-d={i * 75}
           >
@@ -1136,7 +1170,7 @@ function Connect() {
           {PROFILE.firstName}
           <span style={{ color: "var(--accent)" }}>.</span>
         </span>
-        <span className="mono" style={{ fontSize: 11.5, color: "var(--text-muted)" }}>
+        <span className="mono" style={{ fontSize: 11.5, color: "var(--text-muted)" }} suppressHydrationWarning>
           © {new Date().getFullYear()} {PROFILE.name} · {PROFILE.location}
         </span>
         <button
@@ -1167,13 +1201,15 @@ const SECTION_IDS = NAV_SECTIONS.map((s) => s.id);
 
 export default function Portfolio() {
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState(getInitialTheme);
+  const theme = useSyncExternalStore(
+    subscribeTheme,
+    getThemeSnapshot,
+    getThemeServerSnapshot
+  );
   const [activeCategory, setActiveCategory] = useState("All");
   const activeSection = useActiveSection(SECTION_IDS);
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    window.localStorage.setItem("portfolio-theme", theme);
     const metaTheme = document.querySelector('meta[name="theme-color"]');
     if (metaTheme) {
       metaTheme.setAttribute("content", theme === "dark" ? "#06060A" : "#F8F9FC");
@@ -1190,6 +1226,10 @@ export default function Portfolio() {
 
   return (
     <div className="portfolio-shell">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       <div className="noise-overlay" aria-hidden="true" />
       <div className="dot-grid" aria-hidden="true" />
       <Particles />
@@ -1198,10 +1238,10 @@ export default function Portfolio() {
         scrolled={scrolled}
         activeSection={activeSection}
         theme={theme}
-        onToggleTheme={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
+        onToggleTheme={() => setDocumentTheme(theme === "dark" ? "light" : "dark")}
       />
 
-      <main style={{ position: "relative", zIndex: 1 }}>
+      <main id="main-content" style={{ position: "relative", zIndex: 1 }}>
         <Hero />
         <About />
         <Expertise />
