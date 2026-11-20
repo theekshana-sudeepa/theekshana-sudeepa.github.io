@@ -2,10 +2,11 @@
 
 # T. — Theekshana Sudeepa (`theekshana-sudeepa.github.io`)
 
-**Personal Engineering Portfolio — Full-Stack, Enterprise Java, IAM & AI Systems.**  
-Built with React 19, Vite 8, first-class Light/Dark theme parity, unified Schema.org Knowledge Graph SEO, and automated GitHub Pages CI/CD.
+**Personal Engineering Portfolio — TypeScript, React, UI/UX, AI/MCP, WSO2 IAM & Enterprise Java.**  
+Built with strict TypeScript, React 19, Vite 8, build-time SSR pre-rendering, Light/Dark theme parity, unified Schema.org Knowledge Graph SEO, and automated GitHub Pages CI/CD.
 
 [![Live Site](https://img.shields.io/badge/Live-theekshana--sudeepa.github.io-4A9DFF?style=for-the-badge&logo=googlechrome&logoColor=white)](https://theekshana-sudeepa.github.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React 19](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![Vite 8](https://img.shields.io/badge/Vite-8.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
 [![Deploy CI](https://img.shields.io/badge/Deploy-GitHub_Pages-222222?style=for-the-badge&logo=githubactions&logoColor=white)](.github/workflows/deploy.yml)
@@ -19,16 +20,18 @@ Built with React 19, Vite 8, first-class Light/Dark theme parity, unified Schema
 
 ```mermaid
 flowchart LR
-    subgraph Source["Modular React 19 Source"]
-        Data["portfolioData.js<br/>Typed Content Registry"]
-        Icons["Icons.jsx<br/>Vector SVG Primitives"]
-        Styles["portfolio.css<br/>Light & Dark Design Tokens"]
-        App["Portfolio.jsx<br/>Scroll-Spy, Filter & Theme Engine"]
+    subgraph Source["Strict TypeScript & React 19 Source"]
+        Types["types/portfolio.ts<br/>Strict Domain Interfaces"]
+        Data["data/portfolioData.ts<br/>Typed Content Registry"]
+        Icons["components/Icons.tsx<br/>Exhaustive SVG Primitives"]
+        Styles["styles/portfolio.css<br/>Light & Dark Design Tokens"]
+        App["Portfolio.tsx<br/>Scroll-Spy, Filter & Theme Engine"]
     end
 
-    subgraph Build["Vite 8 Production & SSR Pipeline"]
-        Entry["index.html<br/>Anti-FOUC Script & Schema Graph"]
-        SSR["scripts/prerender.mjs<br/>React 19 renderToString Pre-Render"]
+    subgraph Build["Typecheck, Vite 8 & SSR Pipeline"]
+        TSC["tsc --noEmit & ESLint<br/>Zero-Any Strict Gate"]
+        Entry["index.html & main.tsx<br/>Anti-FOUC Script & Hydrate Root"]
+        SSR["entry-server.tsx & prerender.mjs<br/>React 19 renderToString Pre-Render"]
         Public["public/<br/>og-image, ICO/PNG Icons, 404, llms.txt"]
         Bundle["Static Pre-Rendered Dist<br/>Full HTML + Hydrated JS/CSS"]
     end
@@ -39,10 +42,13 @@ flowchart LR
         Crawler["Search & AI Crawlers<br/>Wave-1 HTML, Open Graph & llms.txt"]
     end
 
+    Types -->|Enforce Strict Contracts| Data
+    Types -->|Type Props and Hooks| App
     Data -->|Hydrate Sections| App
     Icons -->|Render UI Glyphs| App
     Styles -->|Apply Theme Variables| App
-    App -->|Compile Client and SSR Bundles| SSR
+    App -->|Verify Types and Lint| TSC
+    TSC -->|Compile Client and SSR Bundles| SSR
     Entry -->|Inject SEO and Theme Boot| Bundle
     SSR -->|Inject Static HTML into Root| Bundle
     Public -->|Copy Static Assets| Bundle
@@ -55,10 +61,10 @@ flowchart LR
 
 ## Engineering & Technical SEO Highlights
 
-- **Build-Time Static HTML Pre-Rendering (Zero Empty Root):** `scripts/prerender.mjs` renders the full React 19 component tree via `renderToString` directly into `dist/index.html` and hydrates seamlessly with `hydrateRoot` + `useSyncExternalStore` — giving Googlebot Wave-1, Bingbot, and AI crawlers complete HTML at `0ms` with near-instant FCP/LCP.
-- **Canonical GitHub Pages SEO (`https://theekshana-sudeepa.github.io/`):** Strict canonical alignment across `<link rel="canonical">`, Open Graph (`profile` + 1200×630 `og-image.png`), multi-size Google SERP favicons (`favicon.ico`, `48x48`, `180x180`, `192x192`, `512x512`), `sitemap.xml`, `robots.txt` (with `/assets/` crawlable), `site.webmanifest`, `llms.txt`, and branded `404.html` (`noindex, follow`).
-- **Unified Schema.org `@graph` & `rel="me"` Identity:** Interlinked JSON-LD entities (`ProfilePage`, `Person`, `WebSite`, and `ItemList` of `SoftwareSourceCode` repositories), bidirectional `rel="me"` links to GitHub & LinkedIn, and a single semantic `<h1>`.
-- **Accessibility, Theme Parity & Recruiter Print Mode:** First-class Dark/Light CSS tokens with WCAG AA+ contrast, anti-FOUC boot script, progressive scroll reveal (100% visible without JS), keyboard Skip-to-Content link, `prefers-reduced-motion` compliance, and a clean `@media print` Save-as-PDF layout.
+- **Strict TypeScript Architecture (Zero `any`):** End-to-end strict TypeScript (`strict: true`, `verbatimModuleSyntax`, `noUnusedLocals`, `noUnusedParameters`, `@typescript-eslint/no-explicit-any: error`) with dedicated domain models in `src/types/portfolio.ts`, exhaustive icon union switching, and type-guarded DOM hooks.
+- **Build-Time Static HTML Pre-Rendering (Zero Empty Root):** `scripts/prerender.mjs` compiles `src/entry-server.tsx` via Vite SSR, renders the full React 19 component tree via `renderToString` directly into `dist/index.html`, and hydrates cleanly with `hydrateRoot` + `useSyncExternalStore` — delivering complete Wave-1 HTML at `0ms`.
+- **Canonical GitHub Pages SEO (`https://theekshana-sudeepa.github.io/`):** Strict canonical alignment across `<link rel="canonical">`, Open Graph (`profile` + 1200×630 `og-image.png`), multi-size Google SERP favicons (`favicon.ico`, `48x48`, `180x180`, `192x192`, `512x512`), `sitemap.xml`, `robots.txt`, `site.webmanifest`, `llms.txt`, and branded `404.html` (`noindex, follow`).
+- **Accessibility, Theme Parity & Recruiter Print Mode:** First-class Dark/Light CSS tokens with WCAG AA+ contrast, anti-FOUC boot script, progressive scroll reveal (100% visible without JS), keyboard Skip-to-Content link, `prefers-reduced-motion` compliance, and `@media print` Save-as-PDF styling.
 
 ---
 
@@ -66,13 +72,13 @@ flowchart LR
 
 | Project | Domain | Core Stack | Links |
 | :--- | :--- | :--- | :--- |
-| **Kasa AI Concierge** | Agentic Commerce · MCP | `Next.js 16` `TypeScript` `Vercel AI SDK` `MCP` | [GitHub](https://github.com/theekshana-sudeepa/kasa) |
-| **Sillara Retail OS** | Offline-First Multi-Tenant POS | `React 19` `TypeScript` `Express` `Prisma` `MySQL 8` | [GitHub](https://github.com/theekshana-sudeepa/sillara) |
-| **AutoBilling Engine** | Idempotent Billing & IaC | `React 19` `TypeScript` `Prisma` `MySQL` `AWS / OCI` | [GitHub](https://github.com/theekshana-sudeepa/autobilling) |
-| **GlobalTrade SCM** | Enterprise Supply Chain | `Java` `Jakarta EE 10` `EJB 4.0` `Hibernate 6` `WildFly` | [GitHub](https://github.com/theekshana-sudeepa/globaltrade-scm) |
-| **WSO2 Identity Integration** | Enterprise CIAM / OIDC | `WSO2 IS` `OIDC PKCE` `RS256 JWKS` `TypeScript` `Docker` | [GitHub](https://github.com/theekshana-sudeepa/wso2-identity-integration-demo) |
+| **Kasa** | Agentic Commerce · Kapruka MCP | `Next.js 16` `React 19` `TypeScript` `Vercel AI SDK` `Kapruka MCP` | [Live](https://kasa-theta.vercel.app) · [GitHub](https://github.com/theekshana-sudeepa/kasa) |
+| **Sillara** | Offline-First Multi-Tenant POS PWA | `React 19` `TypeScript` `Express` `Prisma` `MySQL 8` `AI OCR` | [GitHub](https://github.com/theekshana-sudeepa/sillara) |
+| **AutoBilling** | Idempotent Recurring Billing & IaC | `React 19` `TypeScript` `Express` `Prisma` `PDF Engine` `AWS / OCI IaC` | [GitHub](https://github.com/theekshana-sudeepa/autobilling) |
+| **WSO2 Identity & Asgardeo Integration Demo** | Enterprise CIAM / OIDC PKCE | `React 19` `TypeScript` `OIDC PKCE` `RS256 JWKS` `RBAC` `Docker` | [GitHub](https://github.com/theekshana-sudeepa/wso2-identity-integration-demo) · [wso2/docs-apim](https://github.com/wso2/docs-apim) |
+| **GlobalTrade SCM** | Enterprise Java Supply Chain | `Jakarta EE 10` `EJB 4.0` `Hibernate 6` `JWT RBAC` `WildFly` | [GitHub](https://github.com/theekshana-sudeepa/globaltrade-scm) |
 | **Nimithi Platform** | Bilingual Astronomical Engine | `Next.js` `TypeScript` `Swiss Ephemeris` `i18n` | [Live](https://www.nimithi.com/) |
-| **Tappsy Messaging Suite** | Real-Time Mobile Messaging | `React Native` `TypeScript` `Java EE` `WebSockets` | [App](https://github.com/theekshana-sudeepa/Tappsy) · [Backend](https://github.com/theekshana-sudeepa/TappsyBackEnd) |
+| **Tappsy Messaging Suite** | Real-Time Mobile Messaging | `React Native` `TypeScript` `Java EE` `WebSockets` `MySQL` | [App](https://github.com/theekshana-sudeepa/Tappsy) · [Backend](https://github.com/theekshana-sudeepa/TappsyBackEnd) |
 | **Overdraft Roguelite** | Deterministic 60 Hz Systems | `C#` `Unity URP` `Zero-GC` `Spatial Hashing` | [GitHub](https://github.com/theekshana-sudeepa/overdraft-roguelite) |
 
 ---
@@ -83,7 +89,7 @@ flowchart LR
 theekshana-sudeepa.github.io/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml            # Automated GitHub Pages build & deploy workflow
+│       └── deploy.yml            # CI/CD: typecheck, lint, SSR build & GitHub Pages deploy
 ├── public/
 │   ├── 404.html                  # Branded GitHub Pages 404 (noindex, follow)
 │   ├── apple-touch-icon.png      # 180x180 iOS touch icon
@@ -102,20 +108,23 @@ theekshana-sudeepa.github.io/
 │   └── prerender.mjs             # Build-time React 19 SSR HTML pre-renderer
 ├── src/
 │   ├── components/
-│   │   └── Icons.jsx             # Reusable accessible SVG icon primitives
+│   │   └── Icons.tsx             # Strictly typed SVG icon primitives
 │   ├── data/
-│   │   └── portfolioData.js      # Structured profile, track record, projects & stack data
+│   │   └── portfolioData.ts      # Typed profile, experience, projects & stack registry
 │   ├── styles/
 │   │   └── portfolio.css         # Light/Dark design tokens, print styles & responsive layout
-│   ├── Portfolio.jsx             # Main portfolio application & hydration-safe hooks
-│   ├── entry-server.jsx          # React 19 renderToString server entry
-│   └── main.jsx                  # Smart hydrateRoot / createRoot client mount
+│   ├── types/
+│   │   └── portfolio.ts          # Domain TypeScript interfaces & strict union types
+│   ├── Portfolio.tsx             # Main portfolio application & hydration-safe hooks
+│   ├── entry-server.tsx          # React 19 renderToString server entry
+│   └── main.tsx                  # Smart hydrateRoot / createRoot client mount
 ├── LICENSE                       # MIT License
-├── eslint.config.js              # ESLint 10 flat configuration (React Hooks + Refresh)
+├── eslint.config.js              # ESLint 10 + typescript-eslint flat configuration
 ├── index.html                    # Entry document with anti-FOUC boot & Schema.org @graph
 ├── package.json                  # Project manifest & scripts
+├── tsconfig.json                 # Strict TypeScript compiler configuration
 ├── vercel.json                   # Optional SPA rewrites & security headers
-└── vite.config.js                # Vite 8 build configuration
+└── vite.config.ts                # Vite 8 TypeScript build configuration
 ```
 
 ---
@@ -146,13 +155,16 @@ Open `http://localhost:5173` in your browser.
 ### Verification & Production Build
 
 ```bash
-# Run ESLint across all modules
+# Strict TypeScript type-check (zero emit)
+npx tsc --noEmit
+
+# Run ESLint across all TypeScript and script modules
 npm run lint
 
-# Build optimized production bundle to dist/
+# Build optimized production bundle & SSR pre-render to dist/
 npm run build
 
-# Preview production build locally
+# Preview pre-rendered production build locally
 npm run preview
 ```
 
@@ -167,6 +179,6 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE) fo
 <div align="center">
 
 **Theekshana Sudeepa**  
-[Portfolio (`theekshana-sudeepa.github.io`)](https://theekshana-sudeepa.github.io/) · [LinkedIn](https://www.linkedin.com/in/theekshana-sudeepa/) · [GitHub](https://github.com/theekshana-sudeepa) · [LexoraTech](https://lexoratech.com)
+[Portfolio (`theekshana-sudeepa.github.io`)](https://theekshana-sudeepa.github.io/) · [LinkedIn](https://www.linkedin.com/in/theekshana-sudeepa/) · [GitHub](https://github.com/theekshana-sudeepa)
 
 </div>
