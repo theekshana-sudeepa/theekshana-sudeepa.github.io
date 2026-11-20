@@ -1,6 +1,6 @@
 import { renderToString } from "react-dom/server";
-import Portfolio from "./Portfolio.jsx";
+import Portfolio from "./Portfolio";
 
-export function render() {
+export function render(): string {
   return renderToString(<Portfolio />);
 }

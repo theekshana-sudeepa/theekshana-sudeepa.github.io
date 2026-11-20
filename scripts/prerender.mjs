@@ -10,7 +10,7 @@ const ssrOutDir = path.join(rootDir, "dist-ssr");
 // 1. Build lightweight SSR entry using Vite's native SSR bundler
 execFileSync(
   process.platform === "win32" ? "npx.cmd" : "npx",
-  ["vite", "build", "--ssr", "src/entry-server.jsx", "--outDir", "dist-ssr"],
+  ["vite", "build", "--ssr", "src/entry-server.tsx", "--outDir", "dist-ssr"],
   { stdio: "inherit", cwd: rootDir }
 );
 

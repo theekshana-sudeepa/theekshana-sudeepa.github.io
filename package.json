@@ -4,7 +4,7 @@
   "license": "MIT",
   "author": "Theekshana Sudeepa",
   "homepage": "https://theekshana-sudeepa.github.io/",
-  "description": "Theekshana Sudeepa — Full-Stack, Enterprise Java & AI Software Engineer Portfolio",
+  "description": "Theekshana Sudeepa — Software Engineer Portfolio (TypeScript, React 19, UI/UX, Enterprise Java & AI/MCP)",
   "repository": {
     "type": "git",
     "url": "https://github.com/theekshana-sudeepa/theekshana-sudeepa.github.io.git"
@@ -12,6 +12,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "typecheck": "tsc --noEmit",
     "build": "vite build && node scripts/prerender.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
@@ -30,6 +32,8 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "gh-pages": "^6.3.0",
     "globals": "^17.6.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.73.0",
     "vite": "^8.0.12"
   }
 }

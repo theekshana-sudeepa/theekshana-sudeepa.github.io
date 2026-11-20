@@ -1,6 +1,12 @@
-import { useState, useEffect, useSyncExternalStore } from "react";
+import {
+  useState,
+  useEffect,
+  useSyncExternalStore,
+  type CSSProperties,
+  type ReactElement,
+} from "react";
 import "./styles/portfolio.css";
-import { Icon } from "./components/Icons.jsx";
+import { Icon } from "./components/Icons";
 import {
   PROFILE,
   NAV_SECTIONS,
@@ -12,16 +18,56 @@ import {
   PROJECTS,
   TECH_GROUPS,
   SOCIALS,
-} from "./data/portfolioData.js";
+} from "./data/portfolioData";
+import type {
+  NavSectionId,
+  ParticleSpec,
+  ProjectCategory,
+  ThemeMode,
+} from "./types/portfolio";
+
+interface ChipStyle extends CSSProperties {
+  "--chip-color": string;
+}
+
+interface TyperState {
+  readonly pi: number;
+  readonly ci: number;
+  readonly del: boolean;
+}
+
+interface NavProps {
+  readonly scrolled: boolean;
+  readonly activeSection: NavSectionId | "";
+  readonly theme: ThemeMode;
+  readonly onToggleTheme: () => void;
+}
+
+interface LabelProps {
+  readonly n: string;
+  readonly text: string;
+}
+
+interface ProjectsProps {
+  readonly activeCategory: ProjectCategory;
+  readonly onSelectCategory: (category: ProjectCategory) => void;
+}
+
+const SECTION_IDS: readonly NavSectionId[] = NAV_SECTIONS.map((s) => s.id);
+const SECTION_ID_SET: ReadonlySet<string> = new Set(SECTION_IDS);
+
+function isNavSectionId(value: string): value is NavSectionId {
+  return SECTION_ID_SET.has(value);
+}
 
 /* ─────────────────────────────────────────────
    HOOKS
 ───────────────────────────────────────────── */
 
-function useReveal(dependency) {
+function useReveal(dependency: ProjectCategory): void {
   useEffect(() => {
     document.documentElement.classList.add("js-reveal");
-    const timers = [];
+    const timers: number[] = [];
     const vh = window.innerHeight || 900;
 
     document.querySelectorAll(".sa:not(.v),.ia:not(.v)").forEach((el) => {
@@ -34,11 +80,12 @@ function useReveal(dependency) {
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const delay = Number.parseInt(entry.target.dataset.d || "0", 10);
-            const t = window.setTimeout(() => entry.target.classList.add("v"), delay);
+          if (entry.isIntersecting && entry.target instanceof HTMLElement) {
+            const targetEl = entry.target;
+            const delay = Number.parseInt(targetEl.dataset.d ?? "0", 10);
+            const t = window.setTimeout(() => targetEl.classList.add("v"), delay);
             timers.push(t);
-            io.unobserve(entry.target);
+            io.unobserve(targetEl);
           }
         });
       },
@@ -53,13 +100,13 @@ function useReveal(dependency) {
   }, [dependency]);
 }
 
-function useActiveSection(sectionIds) {
-  const [activeId, setActiveId] = useState("");
+function useActiveSection(sectionIds: readonly NavSectionId[]): NavSectionId | "" {
+  const [activeId, setActiveId] = useState<NavSectionId | "">("");
 
   useEffect(() => {
     const sections = sectionIds
       .map((id) => document.getElementById(id))
-      .filter(Boolean);
+      .filter((el): el is HTMLElement => el !== null);
 
     if (!sections.length) return undefined;
 
@@ -68,8 +115,9 @@ function useActiveSection(sectionIds) {
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]?.target?.id) {
-          setActiveId(visible[0].target.id);
+        const topId = visible[0]?.target.id;
+        if (topId && isNavSectionId(topId)) {
+          setActiveId(topId);
         }
       },
       { rootMargin: "-28% 0px -52% 0px", threshold: [0.1, 0.35, 0.6] }
@@ -82,11 +130,15 @@ function useActiveSection(sectionIds) {
   return activeId;
 }
 
-function useTyper(phrases) {
-  const [state, setState] = useState({ pi: 0, ci: phrases[0].length, del: false });
+function useTyper(phrases: readonly [string, ...string[]]): string {
+  const [state, setState] = useState<TyperState>({
+    pi: 0,
+    ci: phrases[0].length,
+    del: false,
+  });
 
   useEffect(() => {
-    const phrase = phrases[state.pi];
+    const phrase = phrases[state.pi] ?? phrases[0];
     let delay = state.del ? 36 : 68;
 
     if (!state.del && state.ci === phrase.length) {
@@ -95,7 +147,7 @@ function useTyper(phrases) {
 
     const timer = window.setTimeout(() => {
       setState((prev) => {
-        const current = phrases[prev.pi];
+        const current = phrases[prev.pi] ?? phrases[0];
         if (!prev.del) {
           if (prev.ci < current.length) {
             return { ...prev, ci: prev.ci + 1 };
@@ -112,10 +164,11 @@ function useTyper(phrases) {
     return () => window.clearTimeout(timer);
   }, [state, phrases]);
 
-  return phrases[state.pi].slice(0, state.ci);
+  const activePhrase = phrases[state.pi] ?? phrases[0];
+  return activePhrase.slice(0, state.ci);
 }
 
-function subscribeTheme(callback) {
+function subscribeTheme(callback: () => void): () => void {
   window.addEventListener("portfolio-theme-change", callback);
   window.addEventListener("storage", callback);
   return () => {
@@ -124,15 +177,15 @@ function subscribeTheme(callback) {
   };
 }
 
-function getThemeSnapshot() {
+function getThemeSnapshot(): ThemeMode {
   return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
 
-function getThemeServerSnapshot() {
+function getThemeServerSnapshot(): ThemeMode {
   return "dark";
 }
 
-function setDocumentTheme(nextTheme) {
+function setDocumentTheme(nextTheme: ThemeMode): void {
   document.documentElement.setAttribute("data-theme", nextTheme);
   try {
     window.localStorage.setItem("portfolio-theme", nextTheme);
@@ -150,18 +203,18 @@ function setDocumentTheme(nextTheme) {
    AMBIENT PARTICLES
 ───────────────────────────────────────────── */
 
-const STATIC_PARTICLES = [
+const STATIC_PARTICLES: readonly ParticleSpec[] = [
   { id: 0, left: "8%", size: 2.2, delay: 1.5, duration: 24, opacity: 0.24 },
   { id: 1, left: "18%", size: 1.8, delay: 7.2, duration: 28, opacity: 0.18 },
   { id: 2, left: "29%", size: 2.8, delay: 3.8, duration: 21, opacity: 0.26 },
   { id: 3, left: "41%", size: 1.7, delay: 11.4, duration: 26, opacity: 0.16 },
   { id: 4, left: "53%", size: 2.5, delay: 5.1, duration: 30, opacity: 0.24 },
-  { id: 5, left: "65%", size: 2.0, delay: 14.3, duration: 22, opacity: 0.20 },
+  { id: 5, left: "65%", size: 2.0, delay: 14.3, duration: 22, opacity: 0.2 },
   { id: 6, left: "77%", size: 2.9, delay: 2.7, duration: 27, opacity: 0.25 },
   { id: 7, left: "89%", size: 1.8, delay: 9.8, duration: 25, opacity: 0.18 },
 ];
 
-function Particles() {
+function Particles(): ReactElement {
   return (
     <div
       aria-hidden="true"
@@ -190,19 +243,19 @@ function Particles() {
    NAV
 ───────────────────────────────────────────── */
 
-function Nav({ scrolled, activeSection, theme, onToggleTheme }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
+function Nav({ scrolled, activeSection, theme, onToggleTheme }: NavProps): ReactElement {
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!mobileOpen) return undefined;
-    const onKeyDown = (e) => {
+    const onKeyDown = (e: KeyboardEvent): void => {
       if (e.key === "Escape") setMobileOpen(false);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [mobileOpen]);
 
-  const scrollTo = (id) => {
+  const scrollTo = (id: NavSectionId): void => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMobileOpen(false);
   };
@@ -329,7 +382,7 @@ function Nav({ scrolled, activeSection, theme, onToggleTheme }) {
    HERO
 ───────────────────────────────────────────── */
 
-function Hero() {
+function Hero(): ReactElement {
   const typed = useTyper(PROFILE.phrases);
 
   return (
@@ -434,8 +487,9 @@ function Hero() {
           className="hero-desc"
           style={{ animation: "fadeUp 0.6s cubic-bezier(.16,1,.3,1) 0.58s both" }}
         >
-          Architecting resilient enterprise backends, AI-native workflows, and offline-first
-          full-stack products from Colombo, Sri Lanka — built for clarity, reliability, and scale.
+          Software Engineer specializing in TypeScript, React, UI/UX, and Enterprise Java —
+          building intuitive developer interfaces, AI/MCP integrations, and resilient WSO2 IAM
+          architectures from Colombo, Sri Lanka.
         </p>
 
         <div
@@ -523,7 +577,7 @@ function Hero() {
    SECTION LABEL
 ───────────────────────────────────────────── */
 
-function Label({ n, text }) {
+function Label({ n, text }: LabelProps): ReactElement {
   return (
     <p className="section-label">
       {n} / {text}
@@ -535,15 +589,15 @@ function Label({ n, text }) {
    ABOUT & TRACK RECORD
 ───────────────────────────────────────────── */
 
-function About() {
+function About(): ReactElement {
   return (
     <section id="about" className="section-wrap">
       <div className="sa" style={{ marginBottom: 52 }}>
         <Label n="01" text="About" />
-        <h2 className="section-heading" style={{ maxWidth: 640 }}>
-          Engineering systems that{" "}
-          <span className="at">turn complex problems</span>{" "}
-          into dependable software.
+        <h2 className="section-heading" style={{ maxWidth: 660 }}>
+          Engineering software that{" "}
+          <span className="at">connects complex systems</span>{" "}
+          with effortless UI/UX.
         </h2>
       </div>
 
@@ -566,8 +620,11 @@ function About() {
             <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>
               BSc (Hons) in Software Engineering
             </strong>
-            , shipping production systems across Enterprise Java (Jakarta EE / Hibernate), WSO2
-            Identity &amp; Access Management, and modern TypeScript full-stack platforms.
+            , specializing in{" "}
+            <strong style={{ color: "var(--text-primary)", fontWeight: 600 }}>
+              TypeScript, React, UI/UX engineering, and Enterprise Java
+            </strong>{" "}
+            (Jakarta EE 10, Hibernate 6, and WSO2 / Asgardeo IAM).
           </p>
           <p
             style={{
@@ -578,27 +635,37 @@ function About() {
               marginBottom: 32,
             }}
           >
-            Whether building{" "}
+            I have shipped production systems including the{" "}
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>
-              AI-native MCP agents
+              Inner Mental Wellness
+            </strong>{" "}
+            EAP platform serving{" "}
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>
+              50+ organizations
+            </strong>{" "}
+            and the{" "}
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>
+              33-tool Lexora Workspace
+            </strong>{" "}
+            web suite, alongside open-source contributions to{" "}
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>
+              WSO2 API Manager (wso2/docs-apim)
             </strong>
-            , offline-first POS engines, or stateless OIDC security architectures, I prioritize
-            deletion of unnecessary complexity, strict invariants, and measurable real-world impact.
+            , AI/MCP agent integrations, and offline-first React/TypeScript platforms.
           </p>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-            {CREDENTIALS.map((c) => (
-              <span
-                key={c.text}
-                className="ia cred-chip"
-                style={{ "--chip-color": c.color }}
-              >
-                <span style={{ color: c.color, display: "flex" }}>
-                  <Icon name={c.iconKey} size={15} />
+            {CREDENTIALS.map((c) => {
+              const chipStyle: ChipStyle = { "--chip-color": c.color };
+              return (
+                <span key={c.text} className="ia cred-chip" style={chipStyle}>
+                  <span style={{ color: c.color, display: "flex" }}>
+                    <Icon name={c.iconKey} size={15} />
+                  </span>
+                  {c.text}
                 </span>
-                {c.text}
-              </span>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -703,7 +770,7 @@ function About() {
    EXPERTISE
 ───────────────────────────────────────────── */
 
-function Expertise() {
+function Expertise(): ReactElement {
   return (
     <section id="expertise" className="section-wrap">
       <div className="sa" style={{ marginBottom: 48 }}>
@@ -712,8 +779,8 @@ function Expertise() {
           What I bring to the <span className="at">architecture.</span>
         </h2>
         <p className="section-lead">
-          Full-spectrum engineering from database invariants and enterprise IAM to agentic AI
-          interfaces and cross-platform mobile delivery.
+          End-to-end engineering spanning strict TypeScript &amp; React UI/UX, AI/MCP integration
+          workflows, WSO2/Asgardeo IAM security, and Enterprise Java backends.
         </p>
       </div>
 
@@ -770,7 +837,7 @@ function Expertise() {
    SELECTED WORK
 ───────────────────────────────────────────── */
 
-function Projects({ activeCategory, onSelectCategory }) {
+function Projects({ activeCategory, onSelectCategory }: ProjectsProps): ReactElement {
   const filtered =
     activeCategory === "All"
       ? PROJECTS
@@ -782,8 +849,8 @@ function Projects({ activeCategory, onSelectCategory }) {
         <Label n="03" text="Selected Work" />
         <h2 className="section-heading">Systems shipped in the open.</h2>
         <p className="section-lead">
-          Production deployments and open-source architectures — every repository below is live,
-          documented, and inspectable on GitHub.
+          TypeScript, React, AI/MCP, WSO2/Asgardeo IAM, and Enterprise Java systems — every
+          repository and deployment below is live, documented, and inspectable.
         </p>
       </div>
 
@@ -864,7 +931,7 @@ function Projects({ activeCategory, onSelectCategory }) {
                   marginBottom: 12,
                 }}
               >
-                <span style={{ color: p.accent, display: "flex" }}>
+                <span style={{ color: p.accent, display: "flex", flexShrink: 0 }}>
                   <Icon name={p.iconKey} size={24} />
                 </span>
                 <h3
@@ -932,7 +999,7 @@ function Projects({ activeCategory, onSelectCategory }) {
                   className="project-action-link"
                 >
                   <Icon name="github" size={14} />
-                  <span>{p.secondaryRepoLabel || "Backend"}</span>
+                  <span>{p.secondaryRepoLabel ?? "Backend"}</span>
                   <Icon name="arrowUpRight" size={13} />
                 </a>
               )}
@@ -961,7 +1028,7 @@ function Projects({ activeCategory, onSelectCategory }) {
    TECH STACK
 ───────────────────────────────────────────── */
 
-function Stack() {
+function Stack(): ReactElement {
   return (
     <section id="stack" className="section-wrap">
       <div className="sa" style={{ marginBottom: 48 }}>
@@ -1006,7 +1073,7 @@ function Stack() {
    PHILOSOPHY
 ───────────────────────────────────────────── */
 
-function Vision() {
+function Vision(): ReactElement {
   return (
     <section style={{ padding: "96px 6%", position: "relative", overflow: "hidden" }}>
       <div
@@ -1067,10 +1134,10 @@ function Vision() {
    CONNECT & FOOTER
 ───────────────────────────────────────────── */
 
-function Connect() {
-  const [copied, setCopied] = useState(false);
+function Connect(): ReactElement {
+  const [copied, setCopied] = useState<boolean>(false);
 
-  const handleCopyUrl = async () => {
+  const handleCopyUrl = async (): Promise<void> => {
     try {
       await navigator.clipboard.writeText(PROFILE.website);
       setCopied(true);
@@ -1103,13 +1170,13 @@ function Connect() {
             fontSize: 16.5,
             color: "var(--text-secondary)",
             fontWeight: 300,
-            maxWidth: 500,
+            maxWidth: 520,
             margin: "0 auto 28px",
             lineHeight: 1.75,
           }}
         >
-          Open to Software Engineering Internships, Associate Software Engineer roles, and
-          high-impact distributed systems or AI collaborations.
+          Open to Software Engineer &amp; Integration Engineering roles — focused on TypeScript,
+          React, UI/UX craftsmanship, Enterprise Java, and AI/MCP developer platforms.
         </p>
 
         <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
@@ -1127,7 +1194,9 @@ function Connect() {
             type="button"
             className="copy-email-btn"
             style={{ margin: 0 }}
-            onClick={handleCopyUrl}
+            onClick={() => {
+              void handleCopyUrl();
+            }}
           >
             <Icon name={copied ? "check" : "copy"} size={15} />
             <span>{copied ? "Copied Portfolio URL" : PROFILE.websiteHost}</span>
@@ -1141,7 +1210,11 @@ function Connect() {
             key={s.name}
             href={s.href}
             target="_blank"
-            rel={s.name === "LinkedIn" || s.name === "GitHub" ? "me noopener noreferrer" : "noopener noreferrer"}
+            rel={
+              s.name === "LinkedIn" || s.name === "GitHub"
+                ? "me noopener noreferrer"
+                : "noopener noreferrer"
+            }
             className="connect-btn ia"
             data-d={i * 75}
           >
@@ -1170,7 +1243,11 @@ function Connect() {
           {PROFILE.firstName}
           <span style={{ color: "var(--accent)" }}>.</span>
         </span>
-        <span className="mono" style={{ fontSize: 11.5, color: "var(--text-muted)" }} suppressHydrationWarning>
+        <span
+          className="mono"
+          style={{ fontSize: 11.5, color: "var(--text-muted)" }}
+          suppressHydrationWarning
+        >
           © {new Date().getFullYear()} {PROFILE.name} · {PROFILE.location}
         </span>
         <button
@@ -1197,16 +1274,14 @@ function Connect() {
    APP ROOT
 ───────────────────────────────────────────── */
 
-const SECTION_IDS = NAV_SECTIONS.map((s) => s.id);
-
-export default function Portfolio() {
-  const [scrolled, setScrolled] = useState(false);
-  const theme = useSyncExternalStore(
+export default function Portfolio(): ReactElement {
+  const [scrolled, setScrolled] = useState<boolean>(false);
+  const theme = useSyncExternalStore<ThemeMode>(
     subscribeTheme,
     getThemeSnapshot,
     getThemeServerSnapshot
   );
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState<ProjectCategory>("All");
   const activeSection = useActiveSection(SECTION_IDS);
 
   useEffect(() => {
@@ -1217,7 +1292,7 @@ export default function Portfolio() {
   }, [theme]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 56);
+    const onScroll = (): void => setScrolled(window.scrollY > 56);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);

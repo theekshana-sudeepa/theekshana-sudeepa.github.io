@@ -1,5 +1,13 @@
-export function Icon({ name, size = 20 }) {
-  const common = {
+import type { ReactElement, SVGProps } from "react";
+import type { IconName } from "../types/portfolio";
+
+interface IconProps {
+  readonly name: IconName;
+  readonly size?: number;
+}
+
+export function Icon({ name, size = 20 }: IconProps): ReactElement | null {
+  const common: SVGProps<SVGSVGElement> = {
     width: size,
     height: size,
     viewBox: "0 0 24 24",
@@ -170,7 +178,10 @@ export function Icon({ name, size = 20 }) {
           <polyline points="20 6 9 17 4 12" />
         </svg>
       );
-    default:
+    default: {
+      const exhaustiveCheck: never = name;
+      void exhaustiveCheck;
       return null;
+    }
   }
 }
