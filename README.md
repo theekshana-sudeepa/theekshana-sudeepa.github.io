@@ -72,7 +72,7 @@ flowchart LR
 
 | Project | Domain | Core Stack | Links |
 | :--- | :--- | :--- | :--- |
-| **Kasa** | Agentic Commerce · Kapruka MCP | `Next.js 16` `React 19` `TypeScript` `Vercel AI SDK` `Kapruka MCP` | [Live](https://kasa-theta.vercel.app) · [GitHub](https://github.com/theekshana-sudeepa/kasa) |
+| **Kasa** | Agentic Commerce · Kapruka MCP | `Next.js 16` `React 19` `TypeScript` `Vercel AI SDK` `Kapruka MCP` | [GitHub](https://github.com/theekshana-sudeepa/kasa) |
 | **Sillara** | Offline-First Multi-Tenant POS PWA | `React 19` `TypeScript` `Express` `Prisma` `MySQL 8` `AI OCR` | [GitHub](https://github.com/theekshana-sudeepa/sillara) |
 | **AutoBilling** | Idempotent Recurring Billing & IaC | `React 19` `TypeScript` `Express` `Prisma` `PDF Engine` `AWS / OCI IaC` | [GitHub](https://github.com/theekshana-sudeepa/autobilling) |
 | **WSO2 Identity & Asgardeo Integration Demo** | Enterprise CIAM / OIDC PKCE | `React 19` `TypeScript` `OIDC PKCE` `RS256 JWKS` `RBAC` `Docker` | [GitHub](https://github.com/theekshana-sudeepa/wso2-identity-integration-demo) · [wso2/docs-apim](https://github.com/wso2/docs-apim) |

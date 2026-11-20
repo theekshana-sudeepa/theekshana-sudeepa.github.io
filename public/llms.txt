@@ -23,7 +23,7 @@
 
 ## Featured Open-Source & Production Systems
 
-- [Kasa](https://kasa-theta.vercel.app) ([GitHub](https://github.com/theekshana-sudeepa/kasa)): Trilingual AI shopping concierge built with Next.js 16, React 19, TypeScript, Vercel AI SDK, and Kapruka MCP.
+- [Kasa](https://github.com/theekshana-sudeepa/kasa): Trilingual AI shopping concierge built with Next.js 16, React 19, TypeScript, Vercel AI SDK, and Kapruka MCP.
 - [Sillara](https://github.com/theekshana-sudeepa/sillara): Offline-first, multi-tenant POS PWA and B2B retail supply network with React 19, TypeScript, Express, Prisma, MySQL 8, and AI catalog OCR.
 - [AutoBilling](https://github.com/theekshana-sudeepa/autobilling): Idempotent recurring billing, PDF invoicing, and automated payment chasing engine with React 19, TypeScript, Express, Prisma, MySQL, and AWS/OCI IaC.
 - [WSO2 Identity & Asgardeo Integration Demo](https://github.com/theekshana-sudeepa/wso2-identity-integration-demo): React 19 & TypeScript CIAM integration featuring OIDC PKCE, stateless RS256 JWKS verification, RBAC middleware, and Docker, alongside contributions to [wso2/docs-apim](https://github.com/wso2/docs-apim).
